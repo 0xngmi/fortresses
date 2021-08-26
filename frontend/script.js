@@ -7,7 +7,6 @@ async function setup() {
     const provider = new ethers.providers.Web3Provider(window.ethereum)
 
     const signer = provider.getSigner()
-    const address = signer.address
 
 
     const abi = await fetch('../scripts/abi.json').then(abi => abi.json())
@@ -26,7 +25,7 @@ async function setup() {
         ],
         signer
     )
-    return { signer, address, fortresses, realms }
+    return { signer, fortresses, realms }
 }
 
 function write(text) {
@@ -35,7 +34,8 @@ function write(text) {
 }
 
 async function getHashes() {
-    const { address, fortresses } = await setup()
+    const { fortresses } = await setup()
+    const address = prompt("Address")
 
     const eventFilter = fortresses.filters.LogFortressCreated()
     const events = await fortresses.queryFilter(eventFilter)
