@@ -21,7 +21,8 @@ async function setup() {
         [
             "function claimFortress(bytes32 fortressHash) external",
             "function wrap(bytes32 fortressHash) external",
-            "function unwrap(uint tokenId) external"
+            "function unwrap(uint tokenId) external",
+            "function claimed(bytes32) external returns (address)"
         ],
         signer
     )
@@ -72,7 +73,12 @@ async function unwrap() {
 async function transfer() {
     const { fortresses } = await setup()
     const hash = prompt("Fortress hash")
+    const address = prompt("Your address")
     try {
+        const claimed = await fortresses.claimed(hash)
+        if(claimed !== address){
+            throw new Error("You haven't claimed this castle yet")
+        }
         await fortresses.transferFortress(hash, realmsAddress)
     } catch (e) { alert(e) }
 }
